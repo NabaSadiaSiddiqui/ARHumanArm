@@ -53,6 +53,8 @@ import java.util.Vector;
 
 public class VuMark extends Activity implements SampleApplicationControl {
     private static final String LOGTAG = "VuMark";
+
+    public static int TEXTURE_INDEX = 1;
     
     SampleApplicationSession vuforiaAppSession;
     
@@ -127,7 +129,8 @@ public class VuMark extends Activity implements SampleApplicationControl {
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         // Used to set autofocus one second after a manual focus is triggered
         private final Handler autofocusHandler = new Handler();
-        
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
         
         @Override
         public boolean onDown(MotionEvent e)
@@ -155,6 +158,43 @@ public class VuMark extends Activity implements SampleApplicationControl {
             
             return true;
         }
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = event2.getY() - event1.getY();
+                float diffX = event2.getX() - event1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            TEXTURE_INDEX++;
+                            Log.d("Naba", "onSwipeRight()");
+                        } else {
+                            TEXTURE_INDEX--;
+                            Log.d("Naba", "onSwipeLeft()");
+                        }
+                        if(TEXTURE_INDEX > 3) {
+                            TEXTURE_INDEX = 1;
+                        } else if(TEXTURE_INDEX < 1) {
+                            TEXTURE_INDEX = 3;
+                        }
+                        result = true;
+                    }
+                }
+                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffY > 0) {
+                        Log.d("Naba", "onSwipeBottom()");
+                    } else {
+                        Log.d("Naba", "onSwipeTop()");
+                    }
+                    result = true;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
     }
     
     
@@ -164,6 +204,8 @@ public class VuMark extends Activity implements SampleApplicationControl {
     private void loadTextures() {
         mTextures.add(Texture.loadTextureFromApk("vumark_texture.png", getAssets()));
         mTextures.add(Texture.loadTextureFromApk("arm.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("arm1.gif", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("arm2.jpg", getAssets()));
     }
     
     

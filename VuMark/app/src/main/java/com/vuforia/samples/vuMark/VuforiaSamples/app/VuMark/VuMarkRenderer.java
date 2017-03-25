@@ -406,7 +406,6 @@ public class VuMarkRenderer implements GLSurfaceView.Renderer, SampleAppRenderer
 
                     Matrix.translateM(modelViewMatrix, 0, translX, translY, 0);
 
-                    float tmpVumarkHeight = Math.abs(modelViewMatrixWrist[13]) + Math.abs(modelViewMatrixElbow[13]);
                     // Scales the plane relative to the target
                     float vumarkWidthWrist = vmTgtWrist.getSize().getData()[0];
                     float vumarkWidthElbow = vmTgtElbow.getSize().getData()[0];
@@ -432,7 +431,7 @@ public class VuMarkRenderer implements GLSurfaceView.Renderer, SampleAppRenderer
 
                     // activate texture 0, bind it, and pass to shader
                     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures.get(textureIndex).mTextureID[0]);
+                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures.get(VuMark.TEXTURE_INDEX).mTextureID[0]);
                     GLES20.glUniform1i(texSampler2DHandle, 0);
                     GLES20.glUniform1f(calphaHandle, isMainVuMark ? blinkVumark(false) : 1.0f);
 
